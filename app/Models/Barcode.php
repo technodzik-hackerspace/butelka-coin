@@ -9,5 +9,5 @@ class Barcode extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['barcode', 'bottle_id', 'refunded_at'];
+    protected $fillable = ['barcode', 'bottle_id', 'refunded_at', 'withdraw_id', 'withdraw_attempts'];
 }
