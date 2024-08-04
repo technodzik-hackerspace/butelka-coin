@@ -8,8 +8,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/print', [PrintController::class, 'printPage']);
+Route::get('/print', [PrintController::class, 'printPage'])->name('print');
 
 Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/add', [App\Http\Controllers\Barcode::class, 'add'])->name('add');
+Route::post('/create', [App\Http\Controllers\Barcode::class, 'create'])->name('create');
