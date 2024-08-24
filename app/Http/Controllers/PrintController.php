@@ -12,6 +12,7 @@ class PrintController extends Controller
 
     public function __construct(PrintService $printService)
     {
+        $this->middleware('auth');
         $this->printService = $printService;
     }
 
