@@ -40,15 +40,6 @@
                                     >
                                         Log in
                                     </a>
-
-                                    @if (Route::has('register'))
-                                        <a
-                                            href="{{ route('register') }}"
-                                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                        >
-                                            Register
-                                        </a>
-                                    @endif
                                 @endauth
                             </nav>
                         @endif
@@ -70,6 +61,54 @@
                                     <p class="mt-4 text-sm/relaxed">
                                         Scan your bottle
                                     </p>
+                                    <form id="form-check">
+                                    <input type="text" id="barcode" name="barcode" class="form-control" style="color: black" autofocus autocomplete="off">
+                                    </form>
+                                    <div id="invoice"></div>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            document.querySelector('#form-check').addEventListener('submit', function(event) {
+                                                event.preventDefault();
+
+                                                const barcode = document.querySelector('#barcode').value;
+                                                document.querySelector('#invoice').innerHTML = '';
+
+                                                fetch('{{ route('check') }}', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                    },
+                                                    body: JSON.stringify({
+                                                        barcode: barcode
+                                                    })
+                                                })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            // add svg image from data.svg field
+                                                            document.querySelector('#invoice').innerHTML = data.svg;
+                                                       } else {
+                                                            switch (data.error) {
+                                                                case 'alien_barcode':
+                                                                    document.querySelector('#invoice').innerHTML = 'This is not a ButelkaCoin barcode';
+                                                                    break;
+                                                                case 'not_found':
+                                                                    document.querySelector('#invoice').innerHTML = 'Barcode not found';
+                                                                    break;
+                                                                case 'refunded':
+                                                                    document.querySelector('#invoice').innerHTML = 'This ButelkaCoin has been refunded';
+                                                                    break;
+                                                                default:
+                                                                    document.querySelector('#invoice').innerHTML = 'Something went wrong';
+                                                            }
+                                                        }
+
+                                                        document.querySelector('#barcode').focus();
+                                                    });
+                                            });
+                                        });
+                                    </script>
                                 </div>
 
                                 <svg class="size-6 shrink-0 self-center stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>

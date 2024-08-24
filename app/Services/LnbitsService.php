@@ -70,7 +70,7 @@ class LnbitsService
 
     public function getRefund(string $withdrawId)
     {
-        $response = $this->client->get('withdraw/print/' . $withdrawId);
+        $response = $this->client->get('withdraw/img/' . $withdrawId);
 
         return $response->getBody()->getContents();
     }

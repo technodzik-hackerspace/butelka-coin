@@ -16,4 +16,4 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/add', [App\Http\Controllers\Barcode::class, 'add'])->name('add');
 Route::post('/create', [App\Http\Controllers\Barcode::class, 'create'])->name('create');
 
-Route::get('/check', [App\Http\Controllers\Refund::class, 'check'])->name('check');
+Route::post('/check', [App\Http\Controllers\Refund::class, 'check'])->name('check');
